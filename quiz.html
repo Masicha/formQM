@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is It Time You Got an AI Assistant?</title>
+    <style>
+        :root {
+            --primary: #8a2be2;
+            --secondary: #e066ff;
+            --dark: #333;
+            --light: #f9f4ff;
+            --success: #4CAF50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .quiz-header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        .question.active {
+            display: block;
+        }
+        
+        .question h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .option-item {
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-item:hover {
+            background-color: #e6e6e6;
+        }
+        
+        .option-item.selected {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .option-item input {
+            margin-right: 10px;
+        }
+        
+        .icon {
+            margin-right: 15px;
+            font-size: 1.5rem;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+        
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-next {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-next:hover {
+            background-color: #7823d8;
+        }
+        
+        .btn-prev {
+            background-color: #e0e0e0;
+            color: var(--dark);
+        }
+        
+        .btn-prev:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .btn-submit {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background-color: #45a049;
+        }
+        
+        .email-form {
+            display: none;
+            text-align: center;
+        }
+        
+        .email-input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .result {
+            display: none;
+            text-align: center;
+        }
+        
+        .result-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .result-desc {
+            margin-bottom: 20px;
+        }
+        
+        .result-image {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .pdf-info {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .pdf-title {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .quiz-content {
+                padding: 20px;
+            }
+            
+            button {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-header">
+            <h1>Is It Time You Got an AI Assistant?</h1>
+            <div class="subtitle">Discover if you're ready to level up your business with QueenMode AI</div>
+        </div>
+        
+        <div class="quiz-content">
+            <!-- Questions -->
+            <div id="questionContainer">
+                <div class="question active" data-question="1">
+                    <h3>1. How do you manage your daily tasks?</h3>
+                    <ul class="options">
+                        <li class="option-item" data-value="1">
+                            <div class="icon">📝</div> Sticky notes & memory
+                        </li>
+                        <li class="option-item" data-value="2">
+                            <div class="icon">📱</div> Digital to-do list
+                        </li>
+                        <li class="option-item" data-value="3">
+                            <div class="icon">⚙️</div> Task management software with automation
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="question" data-question="2">
+                    <h3>2. How do you follow up with leads or clients?</h3>
+                    <ul class="options">
+                        <li class="option-item" data-value="1">
+                            <div class="icon">🤔</div> I try to remember or use manual notes
+                        </li>
+                        <li class="option-item" data-value="2">
+                            <div class="icon">🔄</div> I follow up sometimes with templates
+                        </li>
+                        <li class="option-item" data-value="3">
+                            <div class="icon">⏰</div> I use automation or smart reminders
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="question" data-question="3">
+                    <h3>3. How do you handle emails?</h3>
+                    <ul class="options">
+                        <li class="option-item" data-value="1">
+                            <div class="icon">✍️</div> Manually respond to everything
+                        </li>
+                        <li class="option-item" data-value="2">
+                            <div class="icon">📋</div> Use templates or saved replies
+                        </li>
+                        <li class="option-item" data-value="3">
+                            <div class="icon">🤖</div> I have an assistant or automation system
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="question" data-question="4">
+                    <h3>4. How do people book meetings with you?</h3>
+                    <ul class="options">
+                        <li class="option-item" data-value="1">
+                            <div class="icon">💬</div> Back-and-forth emails or messages
+                        </li>
+                        <li class="option-item" data-value="2">
+                            <div class="icon">🔗</div> A calendar link or scheduling tool
+                        </li>
+                        <li class="option-item" data-value="3">
+                            <div class="icon">👑</div> AI or virtual assistant books for me
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="question" data-question="5">
+                    <h3>5. What's your current content creation routine?</h3>
+                    <ul class="options">
+                        <li class="option-item" data-value="1">
+                            <div class="icon">💪</div> I do it all myself, start to finish
+                        </li>
+                        <li class="option-item" data-value="2">
+                            <div class="icon">📦</div> I batch create content sometimes
+                        </li>
+                        <li class="option-item" data-value="3">
+                            <div class="icon">🏆</div> It's scheduled and mostly runs itself
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="question" data-question="6">
+                    <h3>6. When you need information from your business data:</h3>
+                    <ul class="options">
+                        <li class="option-item" data-value="1">
+                            <div class="icon">🔍</div> I manually search through files and documents
+                        </li>
+                        <li class="option-item" data-value="2">
+                            <div class="icon">📊</div> I use basic spreadsheets or databases
+                        </li>
+                        <li class="option-item" data-value="3">
+                            <div class="icon">📈</div> I have dashboards or automated reports
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="question" data-question="7">
+                    <h3>7. If an AI assistant could help you today, what would you want it to do first?</h3>
+                    <ul class="options">
+                        <li class="option-item" data-value="1">
+                            <div class="icon">📨</div> Handle my emails and communications
+                        </li>
+                        <li class="option-item" data-value="2">
+                            <div class="icon">📅</div> Schedule meetings & follow ups
+                        </li>
+                        <li class="option-item" data-value="3">
+                            <div class="icon">📝</div> Create content and marketing materials
+                        </li>
+                        <li class="option-item" data-value="3">
+                            <div class="icon">✨</div> All of the above - I need a full system!
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 14.28%"></div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.9rem; margin-top: 5px;">Question <span id="currentQuestion">1</span> of 7</div>
+                </div>
+                
+                <div class="quiz-nav">
+                    <button class="btn-prev" id="prevBtn" style="visibility: hidden;">Previous</button>
+                    <button class="btn-next" id="nextBtn">Next</button>
+                </div>
+            </div>
+            
+            <!-- Email Collection Form -->
+            <div id="emailForm" class="email-form">
+                <h3>You're one step away from your results!</h3>
+                <p>Enter your email to receive your quiz results and our free "QueenMode Productivity Blueprint" PDF.</p>
+                
+                <input type="email" class="email-input" id="emailInput" placeholder="Your best email address" required>
+                
+                <button class="btn-submit" id="submitBtn">Get My Results</button>
+            </div>
+            
+            <!-- Results Section -->
+            <div id="resultContainer" class="result">
+                <!-- Hustling Hero Result -->
+                <div id="result1" class="result-content" style="display: none;">
+                    <div class="result-image">🚀</div>
+                    <h2 class="result-title">The Hustling Hero</h2>
+                    <p class="result-desc">
+                        You're a powerhouse who makes things happen through sheer determination and grit! 
+                        You're personally handling most aspects of your business, which shows incredible dedication.
+                        However, you're likely spending precious time on repetitive tasks that could be automated.
+                    </p>
+                    <p>
+                        <strong>Next steps:</strong> Start small with automation. Consider using QueenMode AI to handle your 
+                        email responses or content creation, freeing up your time to focus on growth and strategy.
+                    </p>
+                    <div class="pdf-info">
+                        <p>We've sent your <span class="pdf-title">"QueenMode Productivity Blueprint"</span> to your email!</p>
+                        <p>This guide will help you identify which tasks to automate first for maximum impact.</p>
+                    </div>
+                </div>
+                
+                <!-- Semi-Automated Queen Result -->
+                <div id="result2" class="result-content" style="display: none;">
+                    <div class="result-image">👑</div>
+                    <h2 class="result-title">The Semi-Automated Queen</h2>
+                    <p class="result-desc">
+                        You've started embracing automation and tools to streamline your business! 
+                        You're already seeing how technology can save you time, but you haven't yet 
+                        created a fully integrated system that works seamlessly.
+                    </p>
+                    <p>
+                        <strong>Next steps:</strong> Connect your existing tools into a more cohesive workflow.
+                        QueenMode AI can help integrate your systems and fill the automation gaps, creating a
+                        business that runs smoothly even when you're not actively managing it.
+                    </p>
+                    <div class="pdf-info">
+                        <p>We've sent your <span class="pdf-title">"QueenMode Productivity Blueprint"</span> to your email!</p>
+                        <p>This guide will show you how to connect your existing tools with AI for maximum efficiency.</p>
+                    </div>
+                </div>
+                
+                <!-- Visionary Leader Result -->
+                <div id="result3" class="result-content" style="display: none;">
+                    <div class="result-image">✨</div>
+                    <h2 class="result-title">The Visionary Leader</h2>
+                    <p class="result-desc">
+                        You're ready to fully embrace the power of AI delegation! You understand the 
+                        value of automation and have already implemented systems that save you time.
+                        Now, you're ready to take it to the next level and create a business that runs
+                        itself while you focus on vision and growth.
+                    </p>
+                    <p>
+                        <strong>Next steps:</strong> Implement QueenMode AI as your complete business assistant.
+                        Let it handle day-to-day operations while you focus on expanding your empire and serving 
+                        your clients at the highest level.
+                    </p>
+                    <div class="pdf-info">
+                        <p>We've sent your <span class="pdf-title">"QueenMode Productivity Blueprint"</span> to your email!</p>
+                        <p>This advanced guide will show you how to create a fully autonomous business with AI at its core.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const questions = document.querySelectorAll('.question');
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const questionContainer = document.getElementById('questionContainer');
+            const emailForm = document.getElementById('emailForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const currentQuestionEl = document.getElementById('currentQuestion');
+            const progressBar = document.querySelector('.progress');
+            
+            let currentQuestionIndex = 0;
+            let userAnswers = [];
+            
+            // Add event listeners to all option items
+            document.querySelectorAll('.option-item').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selection from siblings
+                    const siblings = this.parentElement.querySelectorAll('.option-item');
+                    siblings.forEach(sib => sib.classList.remove('selected'));
+                    
+                    // Add selection to clicked option
+                    this.classList.add('selected');
+                    
+                    // Store answer
+                    const questionId = parseInt(this.closest('.question').getAttribute('data-question'));
+                    const answerValue = parseInt(this.getAttribute('data-value'));
+                    
+                    // Find if question already answered and update
+                    const existingAnswerIndex = userAnswers.findIndex(a => a.question === questionId);
+                    if (existingAnswerIndex > -1) {
+                        userAnswers[existingAnswerIndex].value = answerValue;
+                    } else {
+                        userAnswers.push({ question: questionId, value: answerValue });
+                    }
+                });
+            });
+            
+            // Next button click handler
+            nextBtn.addEventListener('click', function() {
+                // Check if current question has been answered
+                const currentQuestion = questions[currentQuestionIndex];
+                const questionId = parseInt(currentQuestion.getAttribute('data-question'));
+                const isAnswered = userAnswers.some(a => a.question === questionId);
+                
+                if (!isAnswered) {
+                    alert('Please select an answer before proceeding.');
+                    return;
+                }
+                
+                // Hide current question
+                currentQuestion.classList.remove('active');
+                
+                // Show next question or email form if all questions answered
+                if (currentQuestionIndex < questions.length - 1) {
+                    currentQuestionIndex++;
+                    questions[currentQuestionIndex].classList.add('active');
+                    updateProgress();
+                } else {
+                    // All questions answered, show email form
+                    questionContainer.style.display = 'none';
+                    emailForm.style.display = 'block';
+                }
+                
+                // Update previous button visibility
+                prevBtn.style.visibility = currentQuestionIndex > 0 ? 'visible' : 'hidden';
+                
+                // Update next button text on last question
+                if (currentQuestionIndex === questions.length - 1) {
+                    nextBtn.textContent = 'See Results';
+                } else {
+                    nextBtn.textContent = 'Next';
+                }
+            });
+            
+            // Previous button click handler
+            prevBtn.addEventListener('click', function() {
+                if (currentQuestionIndex > 0) {
+                    // Hide current question
+                    questions[currentQuestionIndex].classList.remove('active');
+                    
+                    // Show previous question
+                    currentQuestionIndex--;
+                    questions[currentQuestionIndex].classList.add('active');
+                    updateProgress();
+                    
+                    // Update previous button visibility
+                    prevBtn.style.visibility = currentQuestionIndex > 0 ? 'visible' : 'hidden';
+                    
+                    // Update next button text
+                    nextBtn.textContent = 'Next';
+                }
+            });
+            
+            // Submit button click handler
+            submitBtn.addEventListener('click', function() {
+                const email = document.getElementById('emailInput').value;
+                
+                // Simple email validation
+                if (!email || !email.includes('@') || !email.includes('.')) {
+                    alert('Please enter a valid email address.');
+                    return;
+                }
+                
+                // Calculate result
+                const result = calculateResult();
+                
+                // Show appropriate result
+                emailForm.style.display = 'none';
+                resultContainer.style.display = 'block';
+                
+                if (result === 'hustling-hero') {
+                    document.getElementById('result1').style.display = 'block';
+                } else if (result === 'semi-automated') {
+                    document.getElementById('result2').style.display = 'block';
+                } else {
+                    document.getElementById('result3').style.display = 'block';
+                }
+                
+                // In a real quiz, you would submit the email and results to your server here
+                console.log('Email:', email);
+                console.log('Quiz Result:', result);
+                console.log('User Answers:', userAnswers);
+            });
+            
+            // Calculate quiz result based on answers
+            function calculateResult() {
+                let totalScore = 0;
+                
+                // Sum up all answer values
+                userAnswers.forEach(answer => {
+                    totalScore += answer.value;
+                });
+                
+                // Calculate average (since some questions might not be answered)
+                const avgScore = totalScore / userAnswers.length;
+                
+                // Determine result category
+                if (avgScore < 1.7) {
+                    return 'hustling-hero';
+                } else if (avgScore < 2.5) {
+                    return 'semi-automated';
+                } else {
+                    return 'visionary-leader';
+                }
+            }
+            
+            // Update progress bar and question counter
+            function updateProgress() {
+                const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                currentQuestionEl.textContent = currentQuestionIndex + 1;
+            }
+        });
+    </script>
+</body>
+</html>
